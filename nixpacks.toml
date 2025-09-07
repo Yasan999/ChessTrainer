@@ -1,0 +1,8 @@
+[providers]
+jdk = "11"
+
+[phases.build]
+cmds = ["mvn clean install -DskipTests"]
+
+[start]
+cmd = "java -jar target/ctrainer-0.0.1-SNAPSHOT.jar"

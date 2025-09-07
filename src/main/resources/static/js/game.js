@@ -97,14 +97,15 @@ function next() {
 function hClick(e) {
     if (!hTurn || isProcessing) return;
     
-    isProcessing = true;
-    hTurn = false;
-    overlay.classList.remove('active');
-
     const clickedSqr = e.currentTarget;
     const cId = parseInt(clickedSqr.dataset.id);
     const last = seq[seq.length - 1];
+
     if (cId === last) {
+        isProcessing = true;
+        hTurn = false;
+        overlay.classList.remove('active');
+        clickedSqr.classList.remove('bnk');
         stopTurnTimer();
         score++;
         gInfo.textContent = `Счёт: ${score}`;
@@ -115,6 +116,9 @@ function hClick(e) {
             setTimeout(next, 2000);
         }
     } else {
+        isProcessing = true;
+        hTurn = false;
+        overlay.classList.remove('active');
         stopTurnTimer();
         const correctPiece = document.querySelector(`#pieces-overlay [data-id="${last}"]`);
         if (correctPiece) {
@@ -144,8 +148,7 @@ function stopTurnTimer() {
     }
 }
 function gameOver(title, scoreText) {
-    if (isProcessing && !hTurn) return;
-    isProcessing = true;
+    if (!isProcessing) isProcessing = true;
     hTurn = false;
     stopTurnTimer();
     overlay.classList.remove('active');

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Шахматный тренажёр - Вход</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="cnt">
+        <div id="welcomeBox">
+            <h1>Шахматный тренажёр</h1>
+            <p>Тренируй свою память и внимание</p>
+            <button class="btn" id="showLoginBtn">Войти</button>
+            <button class="btn" id="showRegBtn">Зарегистрироваться</button>
+        </div>
+
+        <div id="loginBox" class="hid">
+            <h2>Вход</h2>
+            <form id="loginForm">
+                <input type="text" id="loginNick" placeholder="Ваш ник" required>
+                <button type="submit">Войти</button>
+            </form>
+            <a href="#" id="backToWelcome1" class="back-link">Назад</a>
+        </div>
+        
+        <div id="regBox" class="hid">
+            <h2>Регистрация</h2>
+            <form id="regForm">
+                <input type="text" id="regFio" placeholder="Ваши ФИО" required>
+                <input type="number" id="regYob" placeholder="Год рождения" required min="1920" max="2023">
+                <input type="text" id="regNick" placeholder="Придумайте ник" required>
+                <div class="agr">
+                    <input type="checkbox" id="regAgr" required>
+                    <label for="regAgr">Я принимаю условия использования и даю согласие на обработку моих персональных данных.</label>
+                </div>
+                <button type="submit">Зарегистрироваться</button>
+            </form>
+            <a href="#" id="backToWelcome2" class="back-link">Назад</a>
+        </div>
+        <div id="err" class="err"></div>
+    </div>
+    <script src="/js/main.js"></script>
+</body>
+</html>

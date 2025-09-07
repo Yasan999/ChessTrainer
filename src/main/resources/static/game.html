@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра - Шахматный тренажёр</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <a href="/profile.html" class="top-right-link">Мой профиль</a>
+    <div class="cnt game-cnt">
+        <div id="modeBox">
+            <h2>Выберите режим</h2>
+            <div class="slider-box">
+                <input type="range" min="1" max="90" value="10" class="slider" id="timeSlider">
+                <p>Время на ход: <span id="timeVal">10</span> секунд</p>
+                <p>Режим: <b id="modeName">Блиц</b></p>
+            </div>
+            <button id="playBtn" class="btn">Играть</button>
+        </div>
+
+        <div id="gameBox" class="hid">
+            <div class="g-header">
+                <h2 id="gInfo">Счёт: 0</h2>
+                <div class="timer-bar"><div id="tBarFill"></div></div>
+            </div>
+            <div class="board-container">
+                <div id="brd"></div>
+                <div id="pieces-overlay"></div>
+            </div>
+        </div>
+
+        <div id="overBox" class="hid">
+            <h2 id="overTitle">Игра окончена!</h2>
+            <p id="fScore"></p>
+            <button id="againBtn" class="btn">Сыграть заново</button>
+            <button id="chModeBtn" class="btn">Сменить режим</button>
+        </div>
+    </div>
+    <script src="/js/game.js"></script>
+</body>
+</html>

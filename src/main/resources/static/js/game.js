@@ -14,6 +14,7 @@ const modeName = document.getElementById('modeName');
 const playBtn = document.getElementById('playBtn');
 
 let seq = [], hTurn = false, gMode = '', score = 0, timeLimit = 10, turnTimer;
+let isProcessing = false;
 const pcs = ['♙','♘','♗','♖','♕','♔'];
 
 if (!uid) window.location.href = '/index.html';
@@ -44,6 +45,7 @@ function start() {
     score = 0;
     seq = [];
     hTurn = false;
+    isProcessing = false;
     gInfo.textContent = `Счёт: 0`;
     if (brd.children.length === 0) genBrd();
     stopTurnTimer();
@@ -88,11 +90,17 @@ function next() {
         overlay.appendChild(clickable);
     }
     hTurn = true;
+    isProcessing = false;
     overlay.classList.add('active');
     startTurnTimer();
 }
 function hClick(e) {
-    if (!hTurn) return;
+    if (!hTurn || isProcessing) return;
+    
+    isProcessing = true;
+    hTurn = false;
+    overlay.classList.remove('active');
+
     const clickedSqr = e.currentTarget;
     const cId = parseInt(clickedSqr.dataset.id);
     const last = seq[seq.length - 1];
@@ -108,8 +116,6 @@ function hClick(e) {
         }
     } else {
         stopTurnTimer();
-        hTurn = false;
-        overlay.classList.remove('hidden');
         const correctPiece = document.querySelector(`#pieces-overlay [data-id="${last}"]`);
         if (correctPiece) {
             correctPiece.classList.add('bnk');
@@ -138,6 +144,8 @@ function stopTurnTimer() {
     }
 }
 function gameOver(title, scoreText) {
+    if (isProcessing && !hTurn) return;
+    isProcessing = true;
     hTurn = false;
     stopTurnTimer();
     overlay.classList.remove('active');

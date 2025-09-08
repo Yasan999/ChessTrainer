@@ -31,22 +31,22 @@ public class ApiCtrl {
     }
 
     @PostMapping("/reg")
-    public ResponseEntity<Usr> reg(@RequestBody Usr usr) {
-        if (urp.findByNick(usr.getNick()).isPresent()) {
+    public ResponseEntity<Usr> reg(@RequestBody Usr u) {
+        if (urp.findByNick(u.getNick()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        usr.setPwd(pwe.encode(usr.getPwd()));
-        Usr saved = urp.save(usr);
-        return new ResponseEntity<>(saved, HttpStatus.CREATED);
+        u.setPwd(pwe.encode(u.getPwd()));
+        Usr svd = urp.save(u);
+        return new ResponseEntity<>(svd, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Usr> login(@RequestBody Map<String, String> creds) {
-        Optional<Usr> oUsr = urp.findByNick(creds.get("nick"));
-        if (oUsr.isPresent()) {
-            Usr usr = oUsr.get();
-            if (pwe.matches(creds.get("pwd"), usr.getPwd())) {
-                return new ResponseEntity<>(usr, HttpStatus.OK);
+    public ResponseEntity<Usr> login(@RequestBody Map<String, String> crd) {
+        Optional<Usr> o = urp.findByNick(crd.get("nick"));
+        if (o.isPresent()) {
+            Usr u = o.get();
+            if (pwe.matches(crd.get("pwd"), u.getPwd())) {
+                return new ResponseEntity<>(u, HttpStatus.OK);
             }
         }
         return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
@@ -55,17 +55,17 @@ public class ApiCtrl {
     @GetMapping("/usr/{uid}")
     public ResponseEntity<Usr> getUsr(@PathVariable Long uid) {
         return urp.findById(uid)
-                .map(usr -> new ResponseEntity<>(usr, HttpStatus.OK))
+                .map(u -> new ResponseEntity<>(u, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/usr/{uid}/bg")
-    public ResponseEntity<Void> updateBg(@PathVariable Long uid, @RequestBody Map<String, String> payload) {
-        Optional<Usr> oUsr = urp.findById(uid);
-        if (oUsr.isPresent()) {
-            Usr usr = oUsr.get();
-            usr.setBg(payload.get("bg"));
-            urp.save(usr);
+    public ResponseEntity<Void> updateBg(@PathVariable Long uid, @RequestBody Map<String, String> pld) {
+        Optional<Usr> o = urp.findById(uid);
+        if (o.isPresent()) {
+            Usr u = o.get();
+            u.setBg(pld.get("bg"));
+            urp.save(u);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -73,12 +73,12 @@ public class ApiCtrl {
 
     @PostMapping("/res")
     public Res saveRes(@RequestBody Map<String, Object> pld) {
-        Res res = new Res();
-        res.setUid(Long.parseLong(pld.get("uid").toString()));
-        res.setScr(Integer.parseInt(pld.get("scr").toString()));
-        res.setMod(pld.get("mod").toString());
-        res.setTs(LocalDateTime.now());
-        return rrp.save(res);
+        Res r = new Res();
+        r.setUid(Long.parseLong(pld.get("uid").toString()));
+        r.setScr(Integer.parseInt(pld.get("scr").toString()));
+        r.setMod(pld.get("mod").toString());
+        r.setTs(LocalDateTime.now());
+        return rrp.save(r);
     }
 
     @GetMapping("/prof/{uid}")
@@ -88,15 +88,15 @@ public class ApiCtrl {
     
     @GetMapping("/all")
     public List<Map<String, Object>> getAllUsersWithStats() {
-        List<Usr> usrs = urp.findAll();
-        List<Res> allRes = rrp.findAll();
-        Map<Long, List<Res>> resByUid = allRes.stream().collect(Collectors.groupingBy(Res::getUid));
+        List<Usr> us = urp.findAll();
+        List<Res> ars = rrp.findAll();
+        Map<Long, List<Res>> rbm = ars.stream().collect(Collectors.groupingBy(Res::getUid));
 
-        return usrs.stream().map(usr -> {
-            Map<String, Object> usrMap = new HashMap<>();
-            usrMap.put("user", usr);
-            usrMap.put("results", resByUid.getOrDefault(usr.getId(), new ArrayList<>()));
-            return usrMap;
+        return us.stream().map(u -> {
+            Map<String, Object> ump = new HashMap<>();
+            ump.put("user", u);
+            ump.put("results", rbm.getOrDefault(u.getId(), new ArrayList<>()));
+            return ump;
         }).collect(Collectors.toList());
     }
 }

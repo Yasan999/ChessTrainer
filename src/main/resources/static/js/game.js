@@ -2,55 +2,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const uid = localStorage.getItem('uid');
     if (!uid) { window.location.href = '/index.html'; return; }
 
-    const mBox = document.getElementById('modeBox');
-    const gBox = document.getElementById('gameBox');
-    const oBox = document.getElementById('overBox');
+    const mBox = document.getElementById('mBox');
+    const gBox = document.getElementById('gBox');
+    const oBox = document.getElementById('oBox');
     const brd = document.getElementById('brd');
-    const overlay = document.getElementById('pieces-overlay');
+    const pov = document.getElementById('pov');
     const gInfo = document.getElementById('gInfo');
-    const fScore = document.getElementById('fScore');
-    const overTitle = document.getElementById('overTitle');
-    const tBarFill = document.getElementById('tBarFill');
-    const timeSlider = document.getElementById('timeSlider');
-    const timeVal = document.getElementById('timeVal');
-    const modeName = document.getElementById('modeName');
-    const playBtn = document.getElementById('playBtn');
+    const fScr = document.getElementById('fScr');
+    const oTtl = document.getElementById('oTtl');
+    const gTime = document.getElementById('gTime');
+    const sldr = document.getElementById('tSldr');
+    const tVal = document.getElementById('tVal');
+    const mName = document.getElementById('mName');
 
-    let seq = [], hTurn = false, gMode = '', score = 0, timeLimit = 10, turnTimer;
-    let isProcessing = false;
+    let seq = [], trn = false, gmd = '', scr = 0, tl = 10, tmr, rem;
+    let prc = false;
     const pcs = ['♙','♘','♗','♖','♕','♔'];
-    let pieceColors = [];
+    let cls = [];
 
-    function updateMode() {
-        const val = parseInt(timeSlider.value);
-        timeVal.textContent = val;
-        timeLimit = val;
-        if (val < 5) gMode = 'Пуля';
-        else if (val <= 10) gMode = 'Блиц';
-        else if (val <= 60) gMode = 'Быстрые';
-        else gMode = 'Классика';
-        modeName.textContent = gMode;
+    function uMod() {
+        const val = parseInt(sldr.value);
+        if (val > 90) {
+            tVal.textContent = '∞';
+            gmd = 'Тренировка';
+            tl = Infinity;
+        } else {
+            tVal.textContent = val;
+            tl = val;
+            if (val < 5) gmd = 'Пуля';
+            else if (val <= 10) gmd = 'Блиц';
+            else if (val <= 60) gmd = 'Быстрые';
+            else gmd = 'Классика';
+        }
+        mName.textContent = gmd;
     }
-    timeSlider.addEventListener('input', updateMode);
-    playBtn.addEventListener('click', start);
-    document.getElementById('againBtn').addEventListener('click', start);
-    document.getElementById('chModeBtn').addEventListener('click', () => {
-        oBox.classList.add('hid');
-        mBox.classList.remove('hid');
-    });
+    sldr.addEventListener('input', uMod);
+    document.getElementById('pBtn').addEventListener('click', start);
+    document.getElementById('aBtn').addEventListener('click', start);
+    document.getElementById('cBtn').addEventListener('click', () => { oBox.classList.add('hid'); mBox.classList.remove('hid'); });
 
     function start() {
-        mBox.classList.add('hid');
-        oBox.classList.add('hid');
-        gBox.classList.remove('hid');
-        overlay.classList.remove('hidden');
-        overlay.innerHTML = '';
-        score = 0; seq = []; hTurn = false; isProcessing = false;
+        mBox.classList.add('hid'); oBox.classList.add('hid'); gBox.classList.remove('hid');
+        pov.classList.remove('hidden'); pov.innerHTML = '';
+        scr = 0; seq = []; trn = false; prc = false;
         gInfo.textContent = `Счёт: 0`;
+        gTime.textContent = '';
         if (brd.children.length === 0) genBrd();
-        pieceColors = [];
-        for (let i = 0; i < 100; i++) pieceColors.push(Math.random() < 0.5 ? 'black' : 'white');
-        stopTurnTimer();
+        cls = Array.from({length: 100}, () => Math.random() < 0.5 ? 'black' : 'white');
+        sTmr();
         setTimeout(next, 500);
     }
 
@@ -63,110 +62,77 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function next() {
-        overlay.classList.remove('hidden');
-        overlay.innerHTML = '';
-        hTurn = false;
+        pov.classList.remove('hidden'); pov.innerHTML = '';
+        trn = false;
         let nPos;
         do { nPos = Math.floor(Math.random() * 100); } while (seq.includes(nPos));
         seq.push(nPos);
-        const theme = localStorage.getItem('theme') || 'classic';
+        const thm = localStorage.getItem('theme') || 'classic';
 
         for(let i=0; i < seq.length; i++){
             const pos = seq[i];
-            const row = Math.floor(pos / 10) + 1;
-            const col = (pos % 10) + 1;
-
-            const clickable = document.createElement('div');
-            clickable.className = 'clickable-sqr';
-            clickable.style.gridRow = row; clickable.style.gridColumn = col;
-            clickable.dataset.id = pos;
-            clickable.addEventListener('click', hClick);
-
+            const row = Math.floor(pos / 10) + 1; const col = (pos % 10) + 1;
+            const clk = document.createElement('div');
+            clk.className = 'clickable-sqr';
+            clk.style.gridRow = row; clk.style.gridColumn = col;
+            clk.dataset.id = pos;
+            clk.addEventListener('click', hClk);
             const pc = document.createElement('span');
-            pc.className = 'pcs';
-            pc.textContent = pcs[i % pcs.length];
-            if(theme === 'alternative') {
-                const color = pieceColors[i];
-                pc.classList.add(color);
-            }
-            clickable.appendChild(pc);
-            if(i === seq.length - 1 && seq.length <= 2) clickable.classList.add('bnk');
-            overlay.appendChild(clickable);
+            pc.className = 'pcs'; pc.textContent = pcs[i % pcs.length];
+            if(thm === 'alternative') { pc.classList.add(cls[i]); }
+            clk.appendChild(pc);
+            if(i === seq.length - 1 && seq.length <= 2) clk.classList.add('bnk');
+            pov.appendChild(clk);
         }
-        hTurn = true; isProcessing = false;
-        overlay.classList.add('active');
-        startTurnTimer();
+        trn = true; prc = false;
+        pov.classList.add('active');
+        bTmr();
     }
     
-    function hClick(e) {
-        if (!hTurn || isProcessing) return;
-        const clickedSqr = e.currentTarget;
-        const cId = parseInt(clickedSqr.dataset.id);
+    function hClk(e) {
+        if (!trn || prc) return;
+        const cSqr = e.currentTarget;
+        const cId = parseInt(cSqr.dataset.id);
         const last = seq[seq.length - 1];
         if (cId === last) {
-            isProcessing = true;
-            hTurn = false;
-            overlay.classList.remove('active');
-            clickedSqr.classList.remove('bnk');
-            stopTurnTimer();
-            score++;
-            gInfo.textContent = `Счёт: ${score}`;
-            overlay.classList.add('hidden');
-            if (score === 100) {
-                gameOver("ВЫ ПОБЕДИЛИ!", `Максимальный счёт: 100`);
-            } else {
-                setTimeout(next, 2000);
-            }
+            prc = true; trn = false; pov.classList.remove('active');
+            cSqr.classList.remove('bnk');
+            sTmr();
+            scr++; gInfo.textContent = `Счёт: ${scr}`;
+            pov.classList.add('hidden');
+            if (scr === 100) { gOver("ПОБЕДА!", `Максимальный счёт: 100`); } 
+            else { setTimeout(next, 1000); }
         } else {
-            isProcessing = true;
-            hTurn = false;
-            overlay.classList.remove('active');
-            stopTurnTimer();
-            const correctPiece = document.querySelector(`#pieces-overlay [data-id="${last}"]`);
-            if (correctPiece) correctPiece.classList.add('bnk');
-            setTimeout(() => {
-                gameOver("Ошибка!", `Ваш результат: ${score}`);
-            }, 4000);
+            prc = true; trn = false; pov.classList.remove('active');
+            sTmr();
+            const cor = document.querySelector(`#pov [data-id="${last}"]`);
+            if (cor) cor.classList.add('bnk');
+            setTimeout(() => { gOver("Ошибка!", `Ваш результат: ${scr}`); }, 2000);
         }
     }
-    function startTurnTimer() {
-        stopTurnTimer();
-        tBarFill.style.transition = 'none';
-        tBarFill.style.width = '100%';
-        setTimeout(() => {
-            tBarFill.style.transition = `width ${timeLimit}s linear`;
-            tBarFill.style.width = '0%';
-        }, 50);
-        turnTimer = setTimeout(() => {
-            gameOver("Время вышло!", `Ваш результат: ${score}`);
-        }, timeLimit * 1000);
+    function bTmr() {
+        sTmr();
+        if (tl === Infinity) { gTime.textContent = 'Время: ∞'; return; }
+        rem = tl; gTime.textContent = `Время: ${rem}`;
+        tmr = setInterval(() => {
+            rem--; gTime.textContent = `Время: ${rem}`;
+            if (rem <= 0) { sTmr(); gOver("Время вышло!", `Ваш результат: ${scr}`); }
+        }, 1000);
     }
-    function stopTurnTimer() { 
-        clearTimeout(turnTimer);
-        if(tBarFill.getAnimations) {
-            tBarFill.getAnimations().forEach(anim => anim.cancel());
-        }
+    function sTmr() { clearInterval(tmr); }
+    function gOver(ttl, st) {
+        if (!prc) prc = true;
+        trn = false; sTmr();
+        pov.classList.remove('active');
+        oTtl.textContent = ttl; fScr.textContent = st;
+        svRes();
+        oBox.classList.remove('hid'); gBox.classList.add('hid');
+        setTimeout(() => { pov.innerHTML = ''; }, 500);
     }
-    function gameOver(title, scoreText) {
-        if (!isProcessing) isProcessing = true;
-        hTurn = false;
-        stopTurnTimer();
-        overlay.classList.remove('active');
-        overTitle.textContent = title;
-        fScore.textContent = scoreText;
-        saveRes();
-        oBox.classList.remove('hid');
-        gBox.classList.add('hid');
-        setTimeout(() => { overlay.innerHTML = ''; }, 500);
-    }
-    async function saveRes() {
+    async function svRes() {
         try {
-            await fetch('/api/res', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ uid: parseInt(uid), scr: score, mod: gMode })
-            });
+            await fetch('/api/res', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid: parseInt(uid), scr: scr, mod: gmd }) });
         } catch (e) { console.error('Failed to save result'); }
     }
-    updateMode();
+    uMod();
 });

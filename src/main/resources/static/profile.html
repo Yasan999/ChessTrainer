@@ -8,38 +8,39 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <div id="userDropdown" class="user-dropdown">
-        <button id="userNickBtn" class="btn"></button>
-        <div id="dropdownMenu" class="dropdown-menu">
+    <div id="uDd" class="user-dropdown">
+        <button id="uBtn" class="btn"></button>
+        <div id="dMenu" class="dropdown-menu">
             <a href="/game.html">Играть</a>
-            <a href="#" id="settingsBtn">Оформление</a>
-            <a href="#" id="logoutBtn">Выйти</a>
+            <a href="#" id="sBtn">Оформление</a>
+            <a href="#" id="lBtn">Выйти</a>
         </div>
     </div>
     <div class="cnt">
-        <div id="userInfo" class="user-info hid">
-            <h2 id="userName"></h2>
-            <p>Год рождения: <span id="userYob"></span></p>
+        <div id="uInf" class="user-info hid">
+            <h2 id="uName"></h2>
+            <p>Год рождения: <span id="uYob"></span></p>
         </div>
         <h1>Ваш прогресс</h1>
-        <div id="modeFilters">
+        <div id="mFlt">
             <button class="btn active" data-mode="all">Все</button>
             <button class="btn" data-mode="Пуля">Пуля</button>
             <button class="btn" data-mode="Блиц">Блиц</button>
             <button class="btn" data-mode="Быстрые">Быстрые</button>
             <button class="btn" data-mode="Классика">Классика</button>
+            <button class="btn" data-mode="Тренировка">Тренировка</button>
         </div>
-        <div id="statGrid" class="stat-grid hid">
-            <div class="stat-card"><h3>Начальный ср.</h3><p id="avgFirst"></p></div>
-            <div class="stat-card"><h3>Текущий ср.</h3><p id="avgLast"></p></div>
+        <div id="sGrid" class="stat-grid hid">
+            <div class="stat-card"><h3>Начальный ср.</h3><p id="avgF"></p></div>
+            <div class="stat-card"><h3>Текущий ср.</h3><p id="avgL"></p></div>
         </div>
-        <p id="noStat" class="hid">Нужно больше игр для построения статистики.</p>
-        <div id="chartBox"><canvas id="myChart"></canvas></div>
+        <p id="nStat" class="hid">Нужно больше игр для построения статистики.</p>
+        <div id="cBox"><canvas id="mCh"></canvas></div>
     </div>
 
-    <div id="settingsModal" class="modal-overlay hid">
+    <div id="sMod" class="modal-overlay hid">
         <div class="modal-content">
-            <button id="closeModalBtn" class="close-btn">&times;</button>
+            <button id="cModBtn" class="close-btn">&times;</button>
             <h2>Настройки оформления</h2>
             <div class="settings-grid">
                 <div class="settings-box">

@@ -15,30 +15,30 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+    public SecurityFilterChain securityFilterChain(HttpSecurity h) throws Exception {
+        h
             .csrf().disable()
-            .authorizeRequests(auth -> auth
+            .authorizeRequests(a -> a
                 .antMatchers("/admin.html", "/api/all", "/js/admin.js").hasRole("ADMIN")
                 .anyRequest().permitAll()
             )
-            .formLogin(form -> form
-                .loginPage("/login.html")
+            .formLogin(f -> f
+                .loginPage("/")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/admin.html", true)
-                .failureUrl("/login.html?error=true")
+                .failureUrl("/?error=true")
                 .permitAll()
             );
-        return http.build();
+        return h.build();
     }
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails admin = User.builder()
+        UserDetails adm = User.builder()
             .username("admin")
             .password("{noop}MasterY2008")
             .roles("ADMIN")
             .build();
-        return new InMemoryUserDetailsManager(admin);
+        return new InMemoryUserDetailsManager(adm);
     }
 }

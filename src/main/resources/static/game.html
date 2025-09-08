@@ -7,45 +7,45 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div id="userDropdown" class="user-dropdown">
-        <button id="userNickBtn" class="btn"></button>
-        <div id="dropdownMenu" class="dropdown-menu">
+    <div id="uDd" class="user-dropdown">
+        <button id="uBtn" class="btn"></button>
+        <div id="dMenu" class="dropdown-menu">
             <a href="/profile.html">Профиль</a>
-            <a href="#" id="settingsBtn">Оформление</a>
+            <a href="#" id="sBtn">Оформление</a>
         </div>
     </div>
 
     <div class="cnt game-cnt">
-        <div id="modeBox">
+        <div id="mBox">
             <h2>Выберите режим</h2>
             <div class="slider-box">
-                <input type="range" min="1" max="90" value="10" class="slider" id="timeSlider">
-                <p>Время на ход: <span id="timeVal">10</span> секунд</p>
-                <p>Режим: <b id="modeName">Блиц</b></p>
+                <input type="range" min="1" max="91" value="10" class="slider" id="tSldr">
+                <p>Время на ход: <span id="tVal">10</span> секунд</p>
+                <p>Режим: <b id="mName">Блиц</b></p>
             </div>
-            <button id="playBtn" class="btn">Играть</button>
+            <button id="pBtn" class="btn">Играть</button>
         </div>
-        <div id="gameBox" class="hid">
+        <div id="gBox" class="hid">
             <div class="g-header">
                 <h2 id="gInfo">Счёт: 0</h2>
-                <div class="timer-bar"><div id="tBarFill"></div></div>
+                <h2 id="gTime"></h2>
             </div>
             <div class="board-container">
                 <div id="brd"></div>
-                <div id="pieces-overlay"></div>
+                <div id="pov"></div>
             </div>
         </div>
-        <div id="overBox" class="hid">
-            <h2 id="overTitle">Игра окончена!</h2>
-            <p id="fScore"></p>
-            <button id="againBtn" class="btn">Сыграть заново</button>
-            <button id="chModeBtn" class="btn">Сменить режим</button>
+        <div id="oBox" class="hid">
+            <h2 id="oTtl">Игра окончена!</h2>
+            <p id="fScr"></p>
+            <button id="aBtn" class="btn">Сыграть заново</button>
+            <button id="cBtn" class="btn">Сменить режим</button>
         </div>
     </div>
     
-    <div id="settingsModal" class="modal-overlay hid">
+    <div id="sMod" class="modal-overlay hid">
         <div class="modal-content">
-            <button id="closeModalBtn" class="close-btn">&times;</button>
+            <button id="cModBtn" class="close-btn">&times;</button>
             <h2>Настройки оформления</h2>
             <div class="settings-grid">
                 <div class="settings-box">

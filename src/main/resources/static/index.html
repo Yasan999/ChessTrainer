@@ -8,37 +8,37 @@
 </head>
 <body>
     <div class="cnt">
-        <div id="welcomeBox">
+        <div id="wBox">
             <h1>Шахматный тренажёр</h1>
             <p>Тренируй свою память и внимание</p>
-            <button class="btn" id="showLoginBtn">Войти</button>
-            <button class="btn" id="showRegBtn">Зарегистрироваться</button>
+            <button class="btn" id="sLBtn">Войти</button>
+            <button class="btn" id="sRBtn">Зарегистрироваться</button>
         </div>
 
-        <div id="loginBox" class="hid">
+        <div id="lBox" class="hid">
             <h2>Вход</h2>
-            <form id="loginForm">
-                <input type="text" id="loginNick" placeholder="Ваш ник" required>
-                <input type="password" id="loginPwd" placeholder="Ваш пароль" required>
+            <form id="lForm">
+                <input type="text" id="lN" placeholder="Ваш логин" required>
+                <input type="password" id="lP" placeholder="Ваш пароль" required>
                 <button type="submit">Войти</button>
             </form>
-            <a href="#" id="backToWelcome1" class="back-link-local">Назад</a>
+            <a href="#" id="bW1" class="back-link-local">Назад</a>
         </div>
         
-        <div id="regBox" class="hid">
+        <div id="rBox" class="hid">
             <h2>Регистрация</h2>
-            <form id="regForm">
-                <input type="text" id="regFio" placeholder="Ваши ФИО" required>
-                <input type="number" id="regYob" placeholder="Год рождения" required min="1920" max="2023">
-                <input type="text" id="regNick" placeholder="Придумайте ник" required>
-                <input type="password" id="regPwd" placeholder="Придумайте пароль" required>
+            <form id="rForm">
+                <input type="text" id="rF" placeholder="Ваши ФИО" required>
+                <input type="number" id="rY" placeholder="Год рождения" required min="1920" max="2023">
+                <input type="text" id="rN" placeholder="Придумайте логин" required>
+                <input type="password" id="rP" placeholder="Придумайте пароль" required>
                 <div class="agr">
-                    <input type="checkbox" id="regAgr" required>
-                    <label for="regAgr">Я принимаю условия использования и даю согласие на обработку моих персональных данных.</label>
+                    <input type="checkbox" id="rA" required>
+                    <label for="rA">Я принимаю условия использования и даю согласие на обработку моих персональных данных.</label>
                 </div>
                 <button type="submit">Зарегистрироваться</button>
             </form>
-            <a href="#" id="backToWelcome2" class="back-link-local">Назад</a>
+            <a href="#" id="bW2" class="back-link-local">Назад</a>
         </div>
         <div id="err" class="err"></div>
     </div>

@@ -10,11 +10,28 @@
 <body>
     <div class="cnt full-page">
         <h1>Статистика игроков</h1>
-        <div id="userList"></div>
-        <div id="userDetail" class="hid">
-            <h2 id="detailName"></h2>
-            <div id="detailChartBox">
-                <canvas id="detailChart"></canvas>
+        <div class="controls">
+            <input type="text" id="srh" placeholder="Поиск по ФИО или логину...">
+        </div>
+        <div class="tbl-container">
+            <table id="uTbl">
+                <thead>
+                    <tr>
+                        <th data-sort="fio">ФИО</th>
+                        <th data-sort="yob">Год рожд.</th>
+                        <th data-sort="nick">Логин</th>
+                        <th data-sort="games">Игр</th>
+                        <th data-sort="avg">Средний счёт</th>
+                        <th data-sort="growth">Рост</th>
+                    </tr>
+                </thead>
+                <tbody id="uBody"></tbody>
+            </table>
+        </div>
+        <div id="uDet" class="hid">
+            <h2 id="dName"></h2>
+            <div id="dChBox">
+                <canvas id="dCh"></canvas>
             </div>
         </div>
     </div>

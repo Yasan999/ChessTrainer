@@ -6,7 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -23,20 +23,20 @@ public class SecurityConfig {
                 .anyRequest().permitAll()
             )
             .formLogin(f -> f
-                .loginPage("/")
+                .loginPage("/index.html")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/admin.html", true)
-                .failureUrl("/?error=true")
+                .failureUrl("/index.html?error=true")
                 .permitAll()
             );
         return h.build();
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
+    public InMemoryUserDetailsManager userDetailsService(PasswordEncoder pwe) {
         UserDetails adm = User.builder()
             .username("admin")
-            .password("{noop}MasterY2008")
+            .password(pwe.encode("MasterY2008"))
             .roles("ADMIN")
             .build();
         return new InMemoryUserDetailsManager(adm);

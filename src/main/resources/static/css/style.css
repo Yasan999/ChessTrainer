@@ -1,6 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
 * { box-sizing: border-box; }
 body { font-family: 'Roboto', sans-serif; background-color: #2c2f33; color: #ffffff; margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow: hidden; background-size: cover; background-position: center; background-repeat: no-repeat; transition: background-image 0.5s; }
+.logo-link { position: absolute; top: 20px; left: 20px; z-index: 100; width: 50px; height: 50px; }
+.logo-svg { width: 100%; height: 100%; fill: #7289da; transition: fill 0.2s; }
+.logo-link:hover .logo-svg { fill: #ffffff; }
 .user-dropdown { position: absolute; top: 20px; right: 20px; z-index: 100; }
 .dropdown-menu { display: none; position: absolute; right: 0; background-color: #23272a; min-width: 160px; box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2); z-index: 1; border-radius: 8px; }
 .dropdown-menu a { color: #fff; padding: 12px 16px; text-decoration: none; display: block; text-align: left; }
@@ -42,4 +45,4 @@ body.theme-alternative .pcs.white { color: #fafafa; text-shadow: 0 0 3px rgba(0,
 #uTbl th, #uTbl td { padding: 12px; border-bottom: 1px solid #4f545c; text-align: left; }
 #uTbl th { cursor: pointer; } #uTbl th:hover { background-color: #4f545c; }
 #uTbl tbody tr:hover { background-color: #2c2f33; cursor: pointer; }
-@media (max-width: 600px) { .cnt { width: 100%; height: 100vh; padding: 15px 0; border-radius: 0; display: flex; flex-direction: column; justify-content: center; } .board-container { width: 100vw; } .pcs { font-size: 7vw; } .user-dropdown { top: 10px; right: 10px; } .btn { padding: 10px 15px; font-size: 14px; } }
+@media (max-width: 600px) { .cnt { width: 100%; height: 100vh; padding: 15px 0; border-radius: 0; display: flex; flex-direction: column; justify-content: center; } .board-container { width: 100vw; } .pcs { font-size: 7vw; } .user-dropdown { top: 10px; right: 10px; } .btn { padding: 10px 15px; font-size: 14px; } .logo-link { top: 10px; left: 10px; width: 40px; height: 40px; } }

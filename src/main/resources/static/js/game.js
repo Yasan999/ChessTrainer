@@ -105,9 +105,14 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             prc = true; trn = false; pov.classList.remove('active');
             sTmr();
-            const cor = document.querySelector(`#pov [data-id="${last}"]`);
-            if (cor) cor.classList.add('bnk');
-            setTimeout(() => { gOver("Ошибка!", `Ваш результат: ${scr}`); }, 2000);
+            const corPc = document.querySelector(`#pov [data-id="${last}"]`);
+            const corSq = brd.children[last];
+            if (corPc) corPc.classList.add('bnk');
+            if (corSq) corSq.classList.add('correct-hl');
+            setTimeout(() => {
+                if (corSq) corSq.classList.remove('correct-hl');
+                gOver("Ошибка!", `Ваш результат: ${scr}`);
+            }, 4000);
         }
     }
 
@@ -144,4 +149,4 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (e) { console.error('Failed to save result'); }
     }
     uMod();
-});
+}); 

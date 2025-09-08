@@ -16,10 +16,23 @@
             <p>Год рождения: <span id="userYob"></span></p>
         </div>
         
+        <div class="settings-grid">
+            <div class="settings-box">
+                <h3>Стиль доски</h3>
+                <label><input type="radio" name="boardStyle" value="classic" checked> Классика</label>
+                <label><input type="radio" name="boardStyle" value="white"> Белая</label>
+            </div>
+            <div class="settings-box">
+                <h3>Стиль фигур</h3>
+                <label><input type="radio" name="pieceStyle" value="classic" checked> Классика</label>
+                <label><input type="radio" name="pieceStyle" value="random"> Случайные</label>
+            </div>
+        </div>
+
         <div class="bg-selector">
-            <h3>URL фонового изображения</h3>
+            <h3>Фон по URL</h3>
             <form id="bgForm">
-                <input type="url" id="bgUrl" placeholder="Вставьте сюда ссылку на картинку (https://...)">
+                <input type="url" id="bgUrl" placeholder="Вставьте ссылку на картинку (https://...)">
                 <button type="submit">Применить</button>
             </form>
         </div>
@@ -33,19 +46,11 @@
             <button class="btn" data-mode="Классика">Классика</button>
         </div>
         <div id="statGrid" class="stat-grid hid">
-            <div class="stat-card">
-                <h3>Начальный ср.</h3>
-                <p id="avgFirst"></p>
-            </div>
-            <div class="stat-card">
-                <h3>Текущий ср.</h3>
-                <p id="avgLast"></p>
-            </div>
+            <div class="stat-card"><h3>Начальный ср.</h3><p id="avgFirst"></p></div>
+            <div class="stat-card"><h3>Текущий ср.</h3><p id="avgLast"></p></div>
         </div>
         <p id="noStat" class="hid">Нужно больше игр для построения статистики.</p>
-        <div id="chartBox">
-            <canvas id="myChart"></canvas>
-        </div>
+        <div id="chartBox"><canvas id="myChart"></canvas></div>
     </div>
     <script src="/js/prof.js"></script>
 </body>

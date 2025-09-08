@@ -14,49 +14,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const logoutBtn = document.getElementById('logoutBtn');
     const bgForm = document.getElementById('bgForm');
     const bgUrlInput = document.getElementById('bgUrl');
-    const bgThumbs = document.querySelectorAll('.bg-thumb');
 
     let chartInstance = null;
     let allData = [];
     
-    const applyBg = (url) => {
-        if (url) document.body.style.backgroundImage = `url('${url}')`;
-    };
-
+    const applyBg = (url) => { if (url) document.body.style.backgroundImage = `url('${url}')`; };
     const saveBg = async (url) => {
-        const urlRegex = /^(https?:\/\/[^\s$.?#].[^\s]*\.(?:jpg|jpeg|gif|png|webp))$/i;
-        if (!urlRegex.test(url)) {
-            alert('Неверный формат URL изображения. Убедитесь, что ссылка ведет на картинку (jpg, png и т.д.).');
-            return;
-        }
+        const urlRegex = /^https?:\/\/[^\s$.?#].[^\s]*\.(?:jpg|jpeg|gif|png|webp)$/i;
+        if (!urlRegex.test(url)) { alert('Неверный формат URL. Ссылка должна вести прямо на картинку (jpg, png и т.д.).'); return; }
         applyBg(url);
         localStorage.setItem('bg', url);
-        try {
-            await fetch(`/api/usr/${uid}/bg`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ bg: url })
-            });
+        try { await fetch(`/api/usr/${uid}/bg`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ bg: url }) });
         } catch (e) { console.error('Failed to save background'); }
     };
+    bgForm.addEventListener('submit', (e) => { e.preventDefault(); const url = bgUrlInput.value; if (url) saveBg(url); });
+    logoutBtn.addEventListener('click', () => { localStorage.clear(); window.location.href = '/index.html'; });
 
-    bgForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const url = bgUrlInput.value;
-        if (url) saveBg(url);
+    document.querySelectorAll('input[name="boardStyle"]').forEach(radio => {
+        radio.addEventListener('change', () => localStorage.setItem('boardStyle', radio.value));
+    });
+    document.querySelectorAll('input[name="pieceStyle"]').forEach(radio => {
+        radio.addEventListener('change', () => localStorage.setItem('pieceStyle', radio.value));
     });
 
-    bgThumbs.forEach(thumb => {
-        thumb.addEventListener('click', () => {
-            saveBg(thumb.src);
-        });
-    });
-
-    logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('uid');
-        localStorage.removeItem('bg');
-        window.location.href = '/index.html';
-    });
+    const boardStyle = localStorage.getItem('boardStyle') || 'classic';
+    document.querySelector(`input[name="boardStyle"][value="${boardStyle}"]`).checked = true;
+    const pieceStyle = localStorage.getItem('pieceStyle') || 'classic';
+    document.querySelector(`input[name="pieceStyle"][value="${pieceStyle}"]`).checked = true;
 
     async function loadUserInfo() {
         try {
@@ -128,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
             else renderStats(allData.filter(d => d.mod === mode));
         });
     });
-
+    
     const bg = localStorage.getItem('bg');
     if (bg) applyBg(bg);
     load();

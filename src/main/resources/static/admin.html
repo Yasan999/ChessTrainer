@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="cnt full-page">
+        <h1>Статистика игроков</h1>
+        <div id="userList"></div>
+        <div id="userDetail" class="hid">
+            <h2 id="detailName"></h2>
+            <div id="detailChartBox">
+                <canvas id="detailChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="/js/admin.js"></script>
+</body>
+</html>

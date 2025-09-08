@@ -9,9 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -84,7 +87,16 @@ public class ApiCtrl {
     }
     
     @GetMapping("/all")
-    public List<Usr> getAllUsers() {
-        return urp.findAll();
+    public List<Map<String, Object>> getAllUsersWithStats() {
+        List<Usr> usrs = urp.findAll();
+        List<Res> allRes = rrp.findAll();
+        Map<Long, List<Res>> resByUid = allRes.stream().collect(Collectors.groupingBy(Res::getUid));
+
+        return usrs.stream().map(usr -> {
+            Map<String, Object> usrMap = new HashMap<>();
+            usrMap.put("user", usr);
+            usrMap.put("results", resByUid.getOrDefault(usr.getId(), new ArrayList<>()));
+            return usrMap;
+        }).collect(Collectors.toList());
     }
 }

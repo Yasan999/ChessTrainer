@@ -19,10 +19,15 @@ public class SecurityConfig {
         http
             .csrf().disable()
             .authorizeRequests(auth -> auth
-                .antMatchers("/admin", "/admin.html", "/api/all").hasRole("ADMIN")
+                .antMatchers("/admin.html", "/api/all", "/admin.js").hasRole("ADMIN")
                 .anyRequest().permitAll()
             )
-            .formLogin();
+            .formLogin(form -> form
+                .loginPage("/login.html")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/admin.html", true)
+                .permitAll()
+            );
         return http.build();
     }
 

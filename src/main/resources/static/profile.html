@@ -8,35 +8,19 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <a href="/game.html" class="back-link">К игре</a>
-    <button id="logoutBtn" class="top-right-link">Выйти</button>
+    <div id="userDropdown" class="user-dropdown">
+        <button id="userNickBtn" class="btn"></button>
+        <div id="dropdownMenu" class="dropdown-menu">
+            <a href="/game.html">Играть</a>
+            <a href="#" id="settingsBtn">Оформление</a>
+            <a href="#" id="logoutBtn">Выйти</a>
+        </div>
+    </div>
     <div class="cnt">
         <div id="userInfo" class="user-info hid">
             <h2 id="userName"></h2>
             <p>Год рождения: <span id="userYob"></span></p>
         </div>
-        
-        <div class="settings-grid">
-            <div class="settings-box">
-                <h3>Стиль доски</h3>
-                <label><input type="radio" name="boardStyle" value="classic" checked> Классика</label>
-                <label><input type="radio" name="boardStyle" value="white"> Белая</label>
-            </div>
-            <div class="settings-box">
-                <h3>Стиль фигур</h3>
-                <label><input type="radio" name="pieceStyle" value="classic" checked> Классика</label>
-                <label><input type="radio" name="pieceStyle" value="random"> Случайные</label>
-            </div>
-        </div>
-
-        <div class="bg-selector">
-            <h3>Фон по URL</h3>
-            <form id="bgForm">
-                <input type="url" id="bgUrl" placeholder="Вставьте ссылку на картинку (https://...)">
-                <button type="submit">Применить</button>
-            </form>
-        </div>
-
         <h1>Ваш прогресс</h1>
         <div id="modeFilters">
             <button class="btn active" data-mode="all">Все</button>
@@ -52,6 +36,29 @@
         <p id="noStat" class="hid">Нужно больше игр для построения статистики.</p>
         <div id="chartBox"><canvas id="myChart"></canvas></div>
     </div>
+
+    <div id="settingsModal" class="modal-overlay hid">
+        <div class="modal-content">
+            <button id="closeModalBtn" class="close-btn">&times;</button>
+            <h2>Настройки оформления</h2>
+            <div class="settings-grid">
+                <div class="settings-box">
+                    <h3>Тема</h3>
+                    <label><input type="radio" name="theme" value="classic"> Классическая</label>
+                    <label><input type="radio" name="theme" value="alternative"> Альтернативная</label>
+                </div>
+                <div class="settings-box">
+                    <h3>Фон по URL</h3>
+                    <form id="bgForm">
+                        <input type="url" id="bgUrl" placeholder="Вставьте ссылку на картинку...">
+                        <button type="submit">Применить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script src="/js/prof.js"></script>
+    <script src="/js/ui.js"></script>
 </body>
 </html>

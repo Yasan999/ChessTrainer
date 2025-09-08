@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let seq = [], hTurn = false, gMode = '', score = 0, timeLimit = 10, turnTimer;
     let isProcessing = false;
     const pcs = ['♙','♘','♗','♖','♕','♔'];
+    let pieceColors = [];
 
     function updateMode() {
         const val = parseInt(timeSlider.value);
@@ -44,12 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
         gBox.classList.remove('hid');
         overlay.classList.remove('hidden');
         overlay.innerHTML = '';
-        score = 0;
-        seq = [];
-        hTurn = false;
-        isProcessing = false;
+        score = 0; seq = []; hTurn = false; isProcessing = false;
         gInfo.textContent = `Счёт: 0`;
         if (brd.children.length === 0) genBrd();
+        pieceColors = [];
+        for (let i = 0; i < 100; i++) pieceColors.push(Math.random() < 0.5 ? 'black' : 'white');
         stopTurnTimer();
         setTimeout(next, 500);
     }
@@ -61,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
             brd.appendChild(sqr);
         }
     }
+    
     function next() {
         overlay.classList.remove('hidden');
         overlay.innerHTML = '';
@@ -68,8 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let nPos;
         do { nPos = Math.floor(Math.random() * 100); } while (seq.includes(nPos));
         seq.push(nPos);
-        
-        const pieceStyle = localStorage.getItem('pieceStyle') || 'classic';
+        const theme = localStorage.getItem('theme') || 'classic';
 
         for(let i=0; i < seq.length; i++){
             const pos = seq[i];
@@ -78,33 +78,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const clickable = document.createElement('div');
             clickable.className = 'clickable-sqr';
-            clickable.style.gridRow = row;
-            clickable.style.gridColumn = col;
+            clickable.style.gridRow = row; clickable.style.gridColumn = col;
             clickable.dataset.id = pos;
             clickable.addEventListener('click', hClick);
 
             const pc = document.createElement('span');
             pc.className = 'pcs';
             pc.textContent = pcs[i % pcs.length];
-            if(pieceStyle === 'random') {
-                pc.style.color = Math.random() < 0.5 ? '#000000' : '#ffffff';
+            if(theme === 'alternative') {
+                const color = pieceColors[i];
+                pc.classList.add(color);
             }
-
             clickable.appendChild(pc);
-            
-            if(i === seq.length - 1 && seq.length <= 2) {
-                clickable.classList.add('bnk');
-            }
+            if(i === seq.length - 1 && seq.length <= 2) clickable.classList.add('bnk');
             overlay.appendChild(clickable);
         }
-        hTurn = true;
-        isProcessing = false;
+        hTurn = true; isProcessing = false;
         overlay.classList.add('active');
         startTurnTimer();
     }
+    
     function hClick(e) {
         if (!hTurn || isProcessing) return;
-        
         const clickedSqr = e.currentTarget;
         const cId = parseInt(clickedSqr.dataset.id);
         const last = seq[seq.length - 1];
@@ -173,11 +168,5 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         } catch (e) { console.error('Failed to save result'); }
     }
-
-    const bg = localStorage.getItem('bg');
-    if (bg) document.body.style.backgroundImage = `url('${bg}')`;
-    const boardStyle = localStorage.getItem('boardStyle');
-    if (boardStyle) document.body.classList.add(`board-style-${boardStyle}`);
-    
     updateMode();
 });

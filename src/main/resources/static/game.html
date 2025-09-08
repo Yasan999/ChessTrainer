@@ -7,7 +7,14 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <a href="/profile.html" class="top-right-link">Мой профиль</a>
+    <div id="userDropdown" class="user-dropdown">
+        <button id="userNickBtn" class="btn"></button>
+        <div id="dropdownMenu" class="dropdown-menu">
+            <a href="/profile.html">Профиль</a>
+            <a href="#" id="settingsBtn">Оформление</a>
+        </div>
+    </div>
+
     <div class="cnt game-cnt">
         <div id="modeBox">
             <h2>Выберите режим</h2>
@@ -18,7 +25,6 @@
             </div>
             <button id="playBtn" class="btn">Играть</button>
         </div>
-
         <div id="gameBox" class="hid">
             <div class="g-header">
                 <h2 id="gInfo">Счёт: 0</h2>
@@ -29,7 +35,6 @@
                 <div id="pieces-overlay"></div>
             </div>
         </div>
-
         <div id="overBox" class="hid">
             <h2 id="overTitle">Игра окончена!</h2>
             <p id="fScore"></p>
@@ -37,6 +42,29 @@
             <button id="chModeBtn" class="btn">Сменить режим</button>
         </div>
     </div>
+    
+    <div id="settingsModal" class="modal-overlay hid">
+        <div class="modal-content">
+            <button id="closeModalBtn" class="close-btn">&times;</button>
+            <h2>Настройки оформления</h2>
+            <div class="settings-grid">
+                <div class="settings-box">
+                    <h3>Тема</h3>
+                    <label><input type="radio" name="theme" value="classic"> Классическая</label>
+                    <label><input type="radio" name="theme" value="alternative"> Альтернативная</label>
+                </div>
+                <div class="settings-box">
+                    <h3>Фон по URL</h3>
+                    <form id="bgForm">
+                        <input type="url" id="bgUrl" placeholder="Вставьте ссылку на картинку...">
+                        <button type="submit">Применить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="/js/game.js"></script>
+    <script src="/js/ui.js"></script>
 </body>
 </html>

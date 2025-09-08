@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tVal = document.getElementById('tVal');
     const mName = document.getElementById('mName');
 
-    let seq = [], trn = false, gmd = '', scr = 0, tl = 10, tmr, rem;
+    let seq = [], trn = false, gmd = '', scr = 0, tl = 10, tmr, eTs;
     let prc = false;
     const pcs = ['♙','♘','♗','♖','♕','♔'];
     let cls = [];
@@ -110,14 +110,23 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => { gOver("Ошибка!", `Ваш результат: ${scr}`); }, 2000);
         }
     }
+
     function bTmr() {
         sTmr();
         if (tl === Infinity) { gTime.textContent = 'Время: ∞'; return; }
-        rem = tl; gTime.textContent = `Время: ${rem}`;
+        eTs = Date.now();
+        gTime.textContent = `Время: ${tl.toFixed(2)}`;
         tmr = setInterval(() => {
-            rem--; gTime.textContent = `Время: ${rem}`;
-            if (rem <= 0) { sTmr(); gOver("Время вышло!", `Ваш результат: ${scr}`); }
-        }, 1000);
+            const elp = Date.now() - eTs;
+            const rem = tl * 1000 - elp;
+            if (rem <= 0) {
+                sTmr();
+                gOver("Время вышло!", `Ваш результат: ${scr}`);
+                return;
+            }
+            const sec = rem / 1000;
+            gTime.textContent = `Время: ${sec < 10 ? sec.toFixed(2) : Math.ceil(sec)}`;
+        }, 50);
     }
     function sTmr() { clearInterval(tmr); }
     function gOver(ttl, st) {

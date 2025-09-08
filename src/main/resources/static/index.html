@@ -17,9 +17,9 @@
 
         <div id="lBox" class="hid">
             <h2>Вход</h2>
-            <form id="lForm">
-                <input type="text" id="lN" placeholder="Ваш логин" required>
-                <input type="password" id="lP" placeholder="Ваш пароль" required>
+            <form id="lForm" method="post" action="/login">
+                <input type="text" id="lN" name="username" placeholder="Ваш логин" required>
+                <input type="password" id="lP" name="password" placeholder="Ваш пароль" required>
                 <button type="submit">Войти</button>
             </form>
             <a href="#" id="bW1" class="back-link-local">Назад</a>

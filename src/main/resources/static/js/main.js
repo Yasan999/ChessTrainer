@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const lBox = document.getElementById('lBox');
     const rBox = document.getElementById('rBox');
     const err = document.getElementById('err');
+    const lForm = document.getElementById('lForm');
 
     document.getElementById('sLBtn').addEventListener('click', () => {
         wBox.classList.add('hid'); lBox.classList.remove('hid'); err.textContent = '';
@@ -17,24 +18,17 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault(); wBox.classList.remove('hid'); rBox.classList.add('hid');
     });
 
-    document.getElementById('lForm').addEventListener('submit', async (e) => {
-        e.preventDefault(); err.textContent = '';
+    lForm.addEventListener('submit', async (e) => {
         const n = document.getElementById('lN').value;
         const p = document.getElementById('lP').value;
-        
-        if (n === 'admin' && p === 'MasterY2008') {
-            const frm = document.createElement('form');
-            frm.method = 'POST'; frm.action = '/login';
-            const iN = document.createElement('input');
-            iN.type = 'hidden'; iN.name = 'username'; iN.value = n;
-            const iP = document.createElement('input');
-            iP.type = 'hidden'; iP.name = 'password'; iP.value = p;
-            frm.appendChild(iN); frm.appendChild(iP);
-            document.body.appendChild(frm);
-            frm.submit();
+
+        if (n === 'admin') {
             return;
         }
-
+        
+        e.preventDefault();
+        err.textContent = '';
+        
         try {
             const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nick: n, pwd: p }) });
             if (res.status === 401) throw new Error('Неверный логин или пароль');

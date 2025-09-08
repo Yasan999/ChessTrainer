@@ -14,6 +14,12 @@
             <input type="password" name="password" placeholder="Пароль" required>
             <button type="submit">Войти</button>
         </form>
+        <div id="err" class="err"></div>
     </div>
+    <script>
+        if (new URLSearchParams(window.location.search).has('error')) {
+            document.getElementById('err').textContent = 'Неверный логин или пароль';
+        }
+    </script>
 </body>
 </html>

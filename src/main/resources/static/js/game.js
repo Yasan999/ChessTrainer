@@ -18,7 +18,6 @@ let isProcessing = false;
 const pcs = ['♙','♘','♗','♖','♕','♔'];
 
 if (!uid) window.location.href = '/index.html';
-
 function updateMode() {
     const val = parseInt(timeSlider.value);
     timeVal.textContent = val;
@@ -42,6 +41,7 @@ function start() {
     oBox.classList.add('hid');
     gBox.classList.remove('hid');
     overlay.classList.remove('hidden');
+    overlay.innerHTML = '';
     score = 0;
     seq = [];
     hTurn = false;
@@ -100,7 +100,6 @@ function hClick(e) {
     const clickedSqr = e.currentTarget;
     const cId = parseInt(clickedSqr.dataset.id);
     const last = seq[seq.length - 1];
-
     if (cId === last) {
         isProcessing = true;
         hTurn = false;
@@ -157,6 +156,7 @@ function gameOver(title, scoreText) {
     saveRes();
     oBox.classList.remove('hid');
     gBox.classList.add('hid');
+    setTimeout(() => { overlay.innerHTML = ''; }, 500);
 }
 async function saveRes() {
     try {

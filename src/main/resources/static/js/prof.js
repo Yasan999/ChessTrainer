@@ -5,10 +5,25 @@ const statGrid = document.getElementById('statGrid');
 const avgFirstEl = document.getElementById('avgFirst');
 const avgLastEl = document.getElementById('avgLast');
 const filterBtns = document.querySelectorAll('#modeFilters .btn');
+const userInfoBox = document.getElementById('userInfo');
+const userNameEl = document.getElementById('userName');
+const userYobEl = document.getElementById('userYob');
+
 let chartInstance = null;
 let allData = [];
 
 if (!uid) window.location.href = '/index.html';
+
+async function loadUserInfo() {
+    try {
+        const res = await fetch(`/api/usr/${uid}`);
+        if (!res.ok) return;
+        const usr = await res.json();
+        userNameEl.textContent = usr.fio;
+        userYobEl.textContent = usr.yob;
+        userInfoBox.classList.remove('hid');
+    } catch(e) { console.error('Failed to load user info'); }
+}
 
 function renderStats(data) {
     if (chartInstance) chartInstance.destroy();
@@ -56,6 +71,7 @@ function renderStats(data) {
 }
 
 async function load() {
+    loadUserInfo();
     try {
         const res = await fetch(`/api/prof/${uid}`);
         if (!res.ok) throw new Error('Error');

@@ -29,13 +29,14 @@ document.getElementById('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     err.textContent = '';
     const nick = document.getElementById('loginNick').value;
+    const pwd = document.getElementById('loginPwd').value;
     try {
         const res = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nick })
+            body: JSON.stringify({ nick, pwd })
         });
-        if (res.status === 404) throw new Error('Пользователь не найден');
+        if (res.status === 401) throw new Error('Неверный ник или пароль');
         if (!res.ok) throw new Error('Ошибка сервера');
         const usr = await res.json();
         localStorage.setItem('uid', usr.id);
@@ -51,9 +52,10 @@ document.getElementById('regForm').addEventListener('submit', async (e) => {
     const fio = document.getElementById('regFio').value;
     const yob = document.getElementById('regYob').value;
     const nick = document.getElementById('regNick').value;
+    const pwd = document.getElementById('regPwd').value;
     const agr = document.getElementById('regAgr').checked;
 
-    if (!fio || !yob || !nick || !agr) {
+    if (!fio || !yob || !nick || !pwd || !agr) {
         err.textContent = 'Пожалуйста, заполните все поля.';
         return;
     }
@@ -62,7 +64,7 @@ document.getElementById('regForm').addEventListener('submit', async (e) => {
         const res = await fetch('/api/reg', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ fio, yob: parseInt(yob), nick })
+            body: JSON.stringify({ fio, yob: parseInt(yob), nick, pwd })
         });
         if (res.status === 409) throw new Error('Этот ник уже занят');
         if (!res.ok) throw new Error('Ошибка сервера');

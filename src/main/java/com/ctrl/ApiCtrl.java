@@ -6,6 +6,7 @@ import com.ctrainer.repo.ResRepo;
 import com.ctrainer.repo.UsrRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,10 +19,12 @@ public class ApiCtrl {
 
     private final UsrRepo urp;
     private final ResRepo rrp;
+    private final PasswordEncoder pwe;
 
-    public ApiCtrl(UsrRepo urp, ResRepo rrp) {
+    public ApiCtrl(UsrRepo urp, ResRepo rrp, PasswordEncoder pwe) {
         this.urp = urp;
         this.rrp = rrp;
+        this.pwe = pwe;
     }
 
     @PostMapping("/reg")
@@ -29,17 +32,30 @@ public class ApiCtrl {
         if (urp.findByNick(usr.getNick()).isPresent()) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
+        usr.setPwd(pwe.encode(usr.getPwd()));
         Usr saved = urp.save(usr);
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<Usr> login(@RequestBody Map<String, String> creds) {
-        Optional<Usr> usr = urp.findByNick(creds.get("nick"));
-        return usr.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<Usr> oUsr = urp.findByNick(creds.get("nick"));
+        if (oUsr.isPresent()) {
+            Usr usr = oUsr.get();
+            if (pwe.matches(creds.get("pwd"), usr.getPwd())) {
+                return new ResponseEntity<>(usr, HttpStatus.OK);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
     
+    @GetMapping("/usr/{uid}")
+    public ResponseEntity<Usr> getUsr(@PathVariable Long uid) {
+        return urp.findById(uid)
+                .map(usr -> new ResponseEntity<>(usr, HttpStatus.OK))
+                .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @PostMapping("/res")
     public Res saveRes(@RequestBody Map<String, Object> pld) {
         Res res = new Res();
@@ -53,5 +69,10 @@ public class ApiCtrl {
     @GetMapping("/prof/{uid}")
     public List<Res> getProf(@PathVariable Long uid) {
         return rrp.findByUidOrderByTsDesc(uid);
+    }
+    
+    @GetMapping("/all")
+    public List<Usr> getAllUsers() {
+        return urp.findAll();
     }
 }

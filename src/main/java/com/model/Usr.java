@@ -16,4 +16,5 @@ public class Usr {
     private int yob;
     @Column(unique = true)
     private String nick;
+    private String pwd;
 }

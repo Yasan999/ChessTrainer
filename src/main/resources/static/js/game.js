@@ -168,3 +168,5 @@ async function saveRes() {
     } catch (e) { console.error('Failed to save result'); }
 }
 window.addEventListener('load', updateMode);
+
+document.addEventListener('DOMContentLoaded', () => { const bg = localStorage.getItem('bg'); if (bg) document.body.style.backgroundImage = `url('${bg}')`; });

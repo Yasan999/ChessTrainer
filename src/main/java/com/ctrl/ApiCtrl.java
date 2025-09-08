@@ -56,6 +56,18 @@ public class ApiCtrl {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @PostMapping("/usr/{uid}/bg")
+    public ResponseEntity<Void> updateBg(@PathVariable Long uid, @RequestBody Map<String, String> payload) {
+        Optional<Usr> oUsr = urp.findById(uid);
+        if (oUsr.isPresent()) {
+            Usr usr = oUsr.get();
+            usr.setBg(payload.get("bg"));
+            urp.save(usr);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
     @PostMapping("/res")
     public Res saveRes(@RequestBody Map<String, Object> pld) {
         Res res = new Res();

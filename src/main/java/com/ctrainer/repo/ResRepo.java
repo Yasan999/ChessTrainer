@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface ResRepo extends JpaRepository<Res, Long> {
     List<Res> findByUidOrderByTsDesc(Long uid);
+    void deleteByUid(Long uid);
 }

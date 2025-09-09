@@ -2,6 +2,7 @@ package com.ctrainer.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -24,6 +25,8 @@ public class SecurityConfig {
                     "/js/admin_dashboard_access.js", 
                     "/api/all"
                 ).hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/usr/{uid}/fio", "/api/usr/{uid}/pwd").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/usr/{uid}").hasRole("ADMIN")
                 .anyRequest().permitAll()
             )
             .formLogin(f -> f

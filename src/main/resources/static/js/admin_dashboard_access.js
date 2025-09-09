@@ -1,13 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     const uBody = document.getElementById('uBody');
     const sMod = document.getElementById('statModal');
-    const uDet = document.getElementById('uDet');
     const dName = document.getElementById('dName');
     const cBtn = document.getElementById('cModBtn');
     const srh = document.getElementById('srh');
     const tblH = document.querySelectorAll('#uTbl th');
+    const editBtn = document.getElementById('editBtn');
+    const delBtn = document.getElementById('delBtn');
 
-    let cht = null, dat = [], srt = { key: 'fio', asc: true };
+    let cht = null, dat = [], srt = { key: 'fio', asc: true }, curUid = null;
 
     const avg = arr => arr.length ? (arr.reduce((a, b) => a + b, 0) / arr.length) : 0;
 
@@ -19,30 +20,50 @@ document.addEventListener('DOMContentLoaded', () => {
             const mid = Math.ceil(len / 2);
             const fH = scrs.slice(0, mid);
             const lH = scrs.slice(mid);
-            if (lH.length > 0) {
-                growth = avg(lH) - avg(fH);
-            }
+            if (lH.length > 0) { growth = avg(lH) - avg(fH); }
         }
         return { ...d.user, games: len, avg: avg(scrs).toFixed(1), growth: growth.toFixed(1), results: d.results };
     }
 
     function renderChart(u) {
         if (cht) cht.destroy();
+        curUid = u.id;
         dName.textContent = u.fio;
         sMod.classList.remove('hid');
-
-        if (!u.results || u.results.length === 0) {
-            document.getElementById('dCh').getContext('2d').clearRect(0,0,1000,1000);
-            return;
-        }
         const scrs = u.results.map(d => d.scr).reverse();
         const lbls = scrs.map((d, i) => `Игра ${i + 1}`);
-        cht = new Chart(document.getElementById('dCh').getContext('2d'), { type: 'line', data: { labels: lbls, datasets: [{ label: 'Счёт', data: scrs, borderColor: '#7289da', tension: 0.1, fill: true, backgroundColor: 'rgba(114, 137, 218, 0.2)' }] }, options: { scales: { y: { beginAtZero: true } } }});
+        cht = new Chart(document.getElementById('dCh').getContext('2d'), { type: 'line', data: { labels: lbls, datasets: [{ data: scrs, borderColor: '#7289da', tension: 0.1, fill: true, backgroundColor: 'rgba(114, 137, 218, 0.2)' }] }, options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }});
     }
 
-    function close() { sMod.classList.add('hid'); }
+    function close() { sMod.classList.add('hid'); curUid = null; }
     cBtn.addEventListener('click', close);
     sMod.addEventListener('click', (e) => { if (e.target === sMod) close(); });
+
+    async function handleEdit() {
+        if (!curUid) return;
+        const nFio = prompt("Введите новое ФИО:", dat.find(d => d.user.id === curUid).user.fio);
+        if (nFio) {
+            try { await fetch(`/api/usr/${curUid}/fio`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ fio: nFio }) }); } catch (e) { alert('Ошибка изменения ФИО'); }
+        }
+        const nPwd = prompt("Введите новый пароль (оставьте пустым, чтобы не менять):");
+        if (nPwd) {
+            try { await fetch(`/api/usr/${curUid}/pwd`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pwd: nPwd }) }); } catch (e) { alert('Ошибка смены пароля'); }
+        }
+        await load();
+        close();
+    }
+
+    async function handleDelete() {
+        if (!curUid || !confirm('Вы уверены, что хотите удалить этого пользователя и все его данные?')) return;
+        try {
+            await fetch(`/api/usr/${curUid}`, { method: 'DELETE' });
+            dat = dat.filter(d => d.user.id !== curUid);
+            render();
+            close();
+        } catch (e) { alert('Ошибка удаления'); }
+    }
+    editBtn.addEventListener('click', handleEdit);
+    delBtn.addEventListener('click', handleDelete);
 
     function render() {
         const q = srh.value.toLowerCase();
@@ -61,12 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tblH.forEach(th => { th.addEventListener('click', () => { const key = th.dataset.sort; if (srt.key === key) { srt.asc = !srt.asc; } else { srt.key = key; srt.asc = true; } render(); }); });
 
     async function load() {
-        try {
-            const res = await fetch('/api/all');
-            if (!res.ok) throw new Error('Не удалось загрузить данные');
-            dat = await res.json();
-            render();
-        } catch(e) { uBody.innerHTML = `<tr><td colspan="6">Ошибка: ${e.message}</td></tr>`; }
+        try { const res = await fetch('/api/all'); if (!res.ok) throw new Error('Не удалось загрузить данные'); dat = await res.json(); render(); } catch(e) { uBody.innerHTML = `<tr><td colspan="6">Ошибка: ${e.message}</td></tr>`; }
     }
     load();
 });

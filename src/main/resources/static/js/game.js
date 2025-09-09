@@ -8,8 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const sldr = document.getElementById('tSldr'); const tVal = document.getElementById('tVal'); const mName = document.getElementById('mName');
     const hintBtn = document.getElementById('hintBtn'); const rulesModal = document.getElementById('rulesModal'); const closeRulesBtn = document.getElementById('closeRulesBtn');
     
-    let seq = [], trn = false, gmd = '', scr = 0, tl = 10, tmr, eTs, paused = false, remTime = 0;
-    let prc = false;
+    let seq = [], trn = false, gmd = '', scr = 0, tl = 10, tmr, eTs, paused = false, remTime = 0, prc = false;
     const pcs = ['♙','♘','♗','♖','♕','♔']; let cls = [];
 
     function uMod() {
@@ -20,57 +19,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         mName.textContent = gmd;
     }
-    sldr.addEventListener('input', uMod);
-    document.getElementById('pBtn').addEventListener('click', start);
-    document.getElementById('aBtn').addEventListener('click', start);
-    document.getElementById('cBtn').addEventListener('click', () => { oBox.classList.add('hid'); mBox.classList.remove('hid'); });
-
+    
     function start() {
         mBox.classList.add('hid'); oBox.classList.add('hid'); gBox.classList.remove('hid');
-        pov.classList.remove('hidden'); pov.innerHTML = '';
-        scr = 0; seq = []; trn = false; prc = false; paused = false;
+        pov.innerHTML = ''; scr = 0; seq = []; trn = false; paused = false; prc = false;
         gInfo.textContent = `Счёт: 0`; gTime.textContent = '';
-        if (brd.children.length === 0) genBrd();
+        if (brd.children.length === 0) { for (let i = 0; i < 100; i++) { const sqr = document.createElement('div'); const cl = (Math.floor(i / 10) + i) % 2 === 0 ? 'wht' : 'blk'; sqr.className = `sqr ${cl}`; brd.appendChild(sqr); } }
         cls = Array.from({length: 100}, () => Math.random() < 0.5 ? 'black' : 'white');
-        sTmr(); setTimeout(next, 500);
+        sTmr(); setTimeout(showSeq, 500);
     }
 
-    function genBrd() { for (let i = 0; i < 100; i++) { const sqr = document.createElement('div'); brd.appendChild(sqr); } }
-    
-    function next() {
-        pov.innerHTML = ''; trn = false; prc = false;
+    function showSeq() {
+        prc = true; trn = false; pov.classList.add('active');
         let nPos; do { nPos = Math.floor(Math.random() * 100); } while (seq.includes(nPos));
         seq.push(nPos);
         
-        if (seq.length <= 3) { hintBtn.classList.remove('hid'); gTime.style.marginLeft = "auto"; } else { hintBtn.classList.add('hid'); gTime.style.marginLeft = "0"; }
+        if (scr < 3) { hintBtn.classList.remove('hid'); gTime.style.marginLeft = "auto"; } else { hintBtn.classList.add('hid'); gTime.style.marginLeft = "0"; }
         
+        pov.innerHTML = '';
         for(let i=0; i < seq.length; i++){
             const pos = seq[i]; const row = Math.floor(pos / 10) + 1; const col = (pos % 10) + 1;
             const clk = document.createElement('div'); clk.className = 'clickable-sqr'; clk.style.gridRow = row; clk.style.gridColumn = col; clk.dataset.id = pos;
             clk.addEventListener('click', hClk);
             const pc = document.createElement('span'); pc.className = `pcs ${cls[i]}`; pc.textContent = pcs[i % pcs.length];
             clk.appendChild(pc);
-            if(i === seq.length - 2) clk.classList.add('bnk');
+            if(i === seq.length - 1 && scr < 2) { clk.classList.add('bnk'); }
             pov.appendChild(clk);
         }
-
-        if (seq.length < 2) {
-            setTimeout(next, 1500);
-            return;
-        }
-
-        trn = true; pov.classList.add('active'); bTmr(tl * 1000);
+        trn = true; prc = false; bTmr(tl * 1000);
     }
     
     function hClk(e) {
         if (!trn || prc || paused) return;
-        const cSqr = e.currentTarget; const cId = parseInt(cSqr.dataset.id); const target = seq[seq.length - 2];
+        prc = true; trn = false;
+        const cId = parseInt(e.currentTarget.dataset.id); const target = seq[seq.length - 1];
         if (cId === target) {
-            prc = true; trn = false; pov.classList.remove('active'); cSqr.classList.remove('bnk');
-            sTmr(); scr++; gInfo.textContent = `Счёт: ${scr}`; pov.classList.add('hidden');
-            if (scr === 99) { gOver("ПОБЕДА!", `Максимальный счёт: 99`); } else { setTimeout(next, 1000); }
+            sTmr(); pov.classList.remove('active');
+            scr++; gInfo.textContent = `Счёт: ${scr}`;
+            if (scr === 100) { gOver("ПОБЕДА!", `Максимальный счёт: 100`); return; }
+            pov.innerHTML = '';
+            setTimeout(showSeq, 2000);
         } else {
-            prc = true; trn = false; pov.classList.remove('active'); sTmr();
+            sTmr(); pov.classList.remove('active');
             const corPc = document.querySelector(`#pov [data-id="${target}"]`); const corSq = brd.children[target];
             if (corPc) corPc.classList.add('bnk'); if (corSq) corSq.classList.add('correct-hl');
             setTimeout(() => { if (corSq) corSq.classList.remove('correct-hl'); gOver("Ошибка!", `Ваш результат: ${scr}`); }, 4000);
@@ -87,10 +77,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 50);
     }
     function sTmr() { clearInterval(tmr); }
-    function gOver(ttl, st) { if (!prc) prc = true; trn = false; sTmr(); pov.classList.remove('active'); oTtl.textContent = ttl; fScr.textContent = st; svRes(); oBox.classList.remove('hid'); gBox.classList.add('hid'); setTimeout(() => { pov.innerHTML = ''; }, 500); }
+    function gOver(ttl, st) { prc = true; trn = false; sTmr(); pov.classList.remove('active'); oTtl.textContent = ttl; fScr.textContent = st; svRes(); oBox.classList.remove('hid'); gBox.classList.add('hid'); setTimeout(() => { pov.innerHTML = ''; }, 500); }
     async function svRes() { try { await fetch('/api/res', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid: parseInt(uid), scr: scr, mod: gmd }) }); } catch (e) { console.error('Failed to save result'); } }
 
-    hintBtn.addEventListener('click', () => { paused = true; sTmr(); rulesModal.classList.remove('hid'); });
+    sldr.addEventListener('input', uMod);
+    document.getElementById('pBtn').addEventListener('click', start);
+    document.getElementById('aBtn').addEventListener('click', start);
+    document.getElementById('cBtn').addEventListener('click', () => { oBox.classList.add('hid'); mBox.classList.remove('hid'); });
+    hintBtn.addEventListener('click', () => { if(trn) { paused = true; sTmr(); rulesModal.classList.remove('hid'); } });
     closeRulesBtn.addEventListener('click', () => { paused = false; rulesModal.classList.add('hid'); bTmr(remTime); });
     uMod();
 });

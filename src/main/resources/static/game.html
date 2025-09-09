@@ -32,7 +32,10 @@
         <div id="gBox" class="hid">
             <div class="g-header">
                 <h2 id="gInfo">Счёт: 0</h2>
-                <h2 id="gTime"></h2>
+                <div class="timer-wrapper">
+                    <h2 id="gTime"></h2>
+                    <button id="hintBtn" class="btn hint-btn hid" title="Правила игры">?</button>
+                </div>
             </div>
             <div class="board-container">
                 <div id="brd"></div>
@@ -54,7 +57,7 @@
             <div class="settings-grid">
                 <div class="settings-box">
                     <h3>Тема</h3>
-                    <label><input type="radio" name="theme" value="classic"> Классическая</label>
+                    <label><input type="radio" name="theme" value="classic"> Стандартная</label>
                     <label><input type="radio" name="theme" value="alternative"> Альтернативная</label>
                 </div>
                 <div class="settings-box">
@@ -64,6 +67,25 @@
                         <button type="submit">Применить</button>
                     </form>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="rulesModal" class="modal-overlay hid">
+        <div class="modal-content">
+            <button id="closeRulesBtn" class="close-btn">&times;</button>
+            <h2>Правила игры</h2>
+            <div class="rules-text">
+                <h3>Цель игры</h3>
+                <p>Повторить последовательность появления шахматных фигур, чтобы набрать как можно больше очков.</p>
+                <h3>Как играть</h3>
+                <p>1. На доске появляется первая фигура. Запомните её.</p>
+                <p>2. Затем на доске появляется вторая фигура. Ваша задача — кликнуть на <strong>предыдущую</strong> фигуру (в данном случае, на первую).</p>
+                <p>3. Если вы ответили верно, на доске появится третья фигура. Теперь вам нужно кликнуть на вторую.</p>
+                <p>4. С каждым верным ходом последовательность удлиняется. Вам всегда нужно кликать на <strong>предпоследнюю</strong> появившуюся фигуру.</p>
+                <h3>Режимы</h3>
+                <p>Режим игры зависит от времени, которое даётся на каждый ход. Чем меньше времени, тем сложнее игра.</p>
+                <p>Игра заканчивается, если вы ошибаетесь или истекает время на ход.</p>
             </div>
         </div>
     </div>

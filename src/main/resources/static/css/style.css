@@ -50,12 +50,16 @@ button:hover, .btn:hover { background-color: var(--accent-color); color: var(--b
 #brd, #pov { position: absolute; top: 0; left: 0; bottom: 0; right: 0; display: grid; grid-template-columns: repeat(10, 1fr); grid-template-rows: repeat(10, 1fr); }
 #brd { border: 2px solid var(--accent-color); } #pov { pointer-events: none; } #pov.active { pointer-events: auto; }
 .sqr { width: 100%; height: 100%; transition: background-color 0.3s; }
-.wht { background-color: #444; } .blk { background-color: #333; }
+
+body.theme-classic .sqr { background-color: #666; }
+body.theme-alternative .wht { background-color: #aaa; }
+body.theme-alternative .blk { background-color: #555; }
 .correct-hl { background-color: rgba(255, 255, 0, 0.5) !important; }
-body.theme-alternative .wht, body.theme-alternative .blk { background-color: #1a1a1a; border: 1px solid #444; }
+
 .clickable-sqr { width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; cursor: pointer; }
-.pcs { font-size: 4.5vmin; color: var(--text-color); transition: opacity 0.3s, transform 0.3s; text-shadow: 0 0 5px rgba(0, 255, 127, 0.5); }
-body.theme-alternative .pcs.white { color: #fff; text-shadow: 0 0 3px rgba(0,0,0,0.7); } body.theme-alternative .pcs.black { color: #ccc; }
+.pcs { font-size: 4.5vmin; transition: opacity 0.3s, transform 0.3s; }
+.pcs.white { color: #ffffff; }
+.pcs.black { color: #111111; }
 #pov.hidden .pcs { opacity: 0; }
 
 .g-header { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
@@ -69,7 +73,7 @@ body.theme-alternative .pcs.white { color: #fff; text-shadow: 0 0 3px rgba(0,0,0
 .modal-content { background: var(--surface-color); padding: 30px; border-radius: 8px; position: relative; width: 90%; max-width: 600px; border: 1px solid var(--accent-color); }
 .legal-modal { max-height: 80vh; display: flex; flex-direction: column; }
 .legal-text, .rules-text { text-align: left; overflow-y: auto; font-size: 14px; color: #ccc; }
-.close-btn { position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 28px; color: var(--text-color); cursor: pointer; transition: color 0.2s; }
+.close-btn { position: absolute; top: 5px; right: 10px; background: none; border: none; font-size: 24px; color: var(--text-color); cursor: pointer; transition: color 0.2s; line-height: 1; padding: 5px; }
 .close-btn:hover { color: var(--accent-color); }
 .modal-controls { margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; }
 

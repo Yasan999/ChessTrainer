@@ -35,25 +35,31 @@ document.addEventListener('DOMContentLoaded', () => {
         sTmr(); setTimeout(next, 500);
     }
 
-    function genBrd() { for (let i = 0; i < 100; i++) { const sqr = document.createElement('div'); sqr.className = (Math.floor(i / 10) + i) % 2 === 0 ? 'sqr wht' : 'sqr blk'; brd.appendChild(sqr); } }
+    function genBrd() { for (let i = 0; i < 100; i++) { const sqr = document.createElement('div'); brd.appendChild(sqr); } }
     
     function next() {
-        pov.classList.remove('hidden'); pov.innerHTML = ''; trn = false;
+        pov.innerHTML = ''; trn = false; prc = false;
         let nPos; do { nPos = Math.floor(Math.random() * 100); } while (seq.includes(nPos));
         seq.push(nPos);
+        
         if (seq.length <= 3) { hintBtn.classList.remove('hid'); gTime.style.marginLeft = "auto"; } else { hintBtn.classList.add('hid'); gTime.style.marginLeft = "0"; }
-        const thm = localStorage.getItem('theme') || 'classic';
+        
         for(let i=0; i < seq.length; i++){
             const pos = seq[i]; const row = Math.floor(pos / 10) + 1; const col = (pos % 10) + 1;
             const clk = document.createElement('div'); clk.className = 'clickable-sqr'; clk.style.gridRow = row; clk.style.gridColumn = col; clk.dataset.id = pos;
             clk.addEventListener('click', hClk);
-            const pc = document.createElement('span'); pc.className = 'pcs'; pc.textContent = pcs[i % pcs.length];
-            if(thm === 'alternative') { pc.classList.add(cls[i]); }
+            const pc = document.createElement('span'); pc.className = `pcs ${cls[i]}`; pc.textContent = pcs[i % pcs.length];
             clk.appendChild(pc);
-            if(i === seq.length - 2 && seq.length > 1) clk.classList.add('bnk');
+            if(i === seq.length - 2) clk.classList.add('bnk');
             pov.appendChild(clk);
         }
-        trn = true; prc = false; pov.classList.add('active'); bTmr(tl * 1000);
+
+        if (seq.length < 2) {
+            setTimeout(next, 1500);
+            return;
+        }
+
+        trn = true; pov.classList.add('active'); bTmr(tl * 1000);
     }
     
     function hClk(e) {

@@ -4,8 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const rBox = document.getElementById('rBox');
     const err = document.getElementById('err');
     const lForm = document.getElementById('lForm');
-    const lN = document.getElementById('lN');
-    const lP = document.getElementById('lP');
 
     document.getElementById('sLBtn').addEventListener('click', () => {
         wBox.classList.add('hid'); lBox.classList.remove('hid'); err.textContent = '';
@@ -20,18 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault(); wBox.classList.remove('hid'); rBox.classList.add('hid');
     });
 
-    const autoAdmLogin = () => {
-        if (lN.value === 'admin' && lP.value === 'MasterY2008') {
-            lForm.submit();
-        }
-    };
-
-    lN.addEventListener('input', autoAdmLogin);
-    lP.addEventListener('input', autoAdmLogin);
-
     lForm.addEventListener('submit', async (e) => {
-        const n = lN.value;
-        const p = lP.value;
+        const n = document.getElementById('lN').value;
+        const p = document.getElementById('lP').value;
 
         if (n === 'admin') {
             return;

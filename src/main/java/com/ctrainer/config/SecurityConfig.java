@@ -19,13 +19,17 @@ public class SecurityConfig {
         h
             .csrf().disable()
             .authorizeRequests(a -> a
-                .antMatchers("/admin.html", "/api/all", "/js/admin.js").hasRole("ADMIN")
+                .antMatchers(
+                    "/a-panel-sess-id-7a9b1c2d-3e4f-5a6b-7c8d-9e0f1a2b3c4d.html", 
+                    "/js/a-panel-sess-id-7a9b1c2d-3e4f-5a6b-7c8d-9e0f1a2b3c4d.js", 
+                    "/api/all"
+                ).hasRole("ADMIN")
                 .anyRequest().permitAll()
             )
             .formLogin(f -> f
                 .loginPage("/index.html")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/admin.html", true)
+                .defaultSuccessUrl("/a-panel-sess-id-7a9b1c2d-3e4f-5a6b-7c8d-9e0f1a2b3c4d.html", true)
                 .failureUrl("/index.html?error=true")
                 .permitAll()
             );

@@ -88,7 +88,9 @@ public class ApiCtrl {
     
     @GetMapping("/all")
     public List<Map<String, Object>> getAllUsersWithStats() {
-        List<Usr> us = urp.findAll();
+        List<Usr> us = urp.findAll().stream()
+                .filter(u -> u.getNick() != null && !u.getNick().isEmpty() && u.getPwd() != null && !u.getPwd().isEmpty())
+                .collect(Collectors.toList());
         List<Res> ars = rrp.findAll();
         Map<Long, List<Res>> rbm = ars.stream().collect(Collectors.groupingBy(Res::getUid));
 

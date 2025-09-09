@@ -26,7 +26,7 @@ public class SecurityConfig {
                     "/api/all"
                 ).hasRole("ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/usr/{uid}/fio", "/api/usr/{uid}/pwd").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/api/usr/{uid}").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/api/usr/{uid}", "/api/admin/clear-all").hasRole("ADMIN")
                 .anyRequest().permitAll()
             )
             .formLogin(f -> f

@@ -20,8 +20,8 @@ public class SecurityConfig {
             .csrf().disable()
             .authorizeRequests(a -> a
                 .antMatchers(
-                    "/a-panel-sess-id-7a9b1c2d-3e4f-5a6b-7c8d-9e0f1a2b3c4d.html", 
-                    "/js/a-panel-sess-id-7a9b1c2d-3e4f-5a6b-7c8d-9e0f1a2b3c4d.js", 
+                    "/admin_dashboard_access.html", 
+                    "/js/admin_dashboard_access.js", 
                     "/api/all"
                 ).hasRole("ADMIN")
                 .anyRequest().permitAll()
@@ -29,7 +29,7 @@ public class SecurityConfig {
             .formLogin(f -> f
                 .loginPage("/index.html")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/a-panel-sess-id-7a9b1c2d-3e4f-5a6b-7c8d-9e0f1a2b3c4d.html", true)
+                .defaultSuccessUrl("/admin_dashboard_access.html", true)
                 .failureUrl("/index.html?error=true")
                 .permitAll()
             );
